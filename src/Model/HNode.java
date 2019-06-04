@@ -1,7 +1,7 @@
 package src.Model;
 
 class HNode {
-    HNode left,right,p;
+    HNode left,right,position;
     
     Comparable key;
     Object value;
@@ -9,6 +9,6 @@ class HNode {
     public HNode(Comparable key, Object value){
         this.key=key;
         this.value=value;
-        this.left=this.right=this.p=null;
+        this.left=this.right=this.position=null;
     }
 }
