@@ -16,29 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package src.Util;
+import java.awt.Rectangle;
 
-import java.io.File;
 
-/**
- *
- * @author Riquito
- */
-public class Tools {
-    
-    /** Creates a new instance of Tools */
-    public Tools() {
-    }
-    
-    /**
-     * Join two or more pathname components, inserting the system file separator
-     *  as needed
-     * 
-     */
-    public static String joinPath(String basename, String filename) {
-        if (basename.endsWith("/")||basename.endsWith("\\")||basename.endsWith(":"))
-            basename=basename.substring(0,basename.length()-2);
-        return basename+File.separator+filename;
+public class RectangleExtension {
+    public static Rectangle scale(Rectangle ractangle, double ratio) {
+    	return new Rectangle((int)Math.round(ractangle.getX() * ratio),
+    			(int)Math.round(ractangle.getY() * ratio),
+    			(int)Math.round(ractangle.getWidth() * ratio),
+    			(int)Math.round(ractangle.getHeight() * ratio));
     }
 }

@@ -16,23 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package src.Model;
-import java.awt.Rectangle;
 
+package src.Util;
 
-public class Coord extends Rectangle {
-    public Coord() {
-        
-    }
-    public Coord(int x, int y, int width, int height) {
-        super(x,y,width,height);
-    }
-    public Coord scale(double ratio){
-        if (ratio==1.0) return this;
-        return new Coord((int)Math.round(x*ratio),
-            (int)Math.round(y*ratio),
-            (int)Math.round(this.getWidth()*ratio),
-            (int)Math.round(this.getHeight()*ratio)
-        );
+import java.io.File;
+
+/**
+ *
+ * @author Riquito
+ */
+public class PathExtension {
+    /**
+     * Join two or more pathname components, inserting the system file separator
+     *  as needed
+     * 
+     */
+    public static String join(String basePath, String fileName) {
+        if (basePath.endsWith("/") || basePath.endsWith("\\") || basePath.endsWith(":")) {
+        	basePath = basePath.substring(0, basePath.length() - 2);
+        }
+
+        return basePath + File.separator + fileName;
     }
 }
