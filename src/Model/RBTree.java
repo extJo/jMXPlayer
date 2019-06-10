@@ -22,7 +22,7 @@ package src.Model;
  *
  * @author Riquito
  */
-public class RBTree extends Tree {
+public class RBTree extends Tree im{
 	public static final short BLACK = 0;
 	public static final short RED = 1;
 

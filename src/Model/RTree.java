@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 
-public class RTree {
+public class RTree extends Node{
 	protected int capacity;
 
-	protected Node root;
+	protected Node root;	
+	protected Createlist createlist = new Createlist();
+	
 
 	// costruttore dell'albero, imposta la sua capacità
 
@@ -550,229 +552,12 @@ public class RTree {
 	// cancella il rettangolo r dall'albero
 
 	public void deleteElement(Rectangle r) {
-
-		ArrayList listaNodi, listaLivelli, tmp;
-
-		Integer livello = new Integer(1);
-
-		Node padre;
-
-		double c;
-
-		int l;
-
-		listaNodi = new ArrayList(); // lista dei nodi da reinserire
-
-		listaLivelli = new ArrayList(); // corrispondenti livelli dei nodi da reinserire
-
-		tmp = new ArrayList();
-
-		c = capacity;
-
-		c = Math.ceil(c / 2);
-
-		Node leaf;
-
-		// se l'albero è vuoto non cancello niente
-
-		if (root == null) {
-
-			listaNodi = null;
-
-			listaLivelli = null;
-
-		}
-
-		else {
-
-			// cerco la fogli dove c'e' il rettangolo, con annesso livello
-
-			root.FindLeaf(r, livello, tmp);
-
-			// se non ho trovato niente la foglia è null
-
-			if (tmp.isEmpty())
-				leaf = null;
-
-			else {
-
-				livello = (Integer) tmp.get(1);
-
-				leaf = (Node) tmp.get(0);
-
-			}
-
-			// una volta trovata la foglia la elimino
-
-			if (leaf != null) {
-
-				for (int i = 0; i < leaf.numRect(); i++) {
-
-					if (r.equals(leaf.getRect(i))) {
-
-						// cancella il rettangolo
-
-						leaf.delRectangle(i);
-
-						// risistemo il nodo foglia spostando l'ultimo rattangolo
-
-						// nel posto vuoto
-
-						// in questo caso non ho figli da spostare!
-
-						leaf.setRect(i, leaf.getRect(leaf.numRect()));
-
-						leaf.setRect(leaf.numRect(), null);
-
-						// if(leaf.getChild(i)!=null)(leaf.getChild(i)).setIndex(i);
-
-						// controllo se devo risistemare tutto
-
-						// perché sono rimasti pochi rettangoli
-
-						if (leaf.numRect() < c && leaf != root) {
-
-							// cancello la bounded box presente nel padre
-
-							// i parametri che passo alla AdjustTree sono:
-
-							// 1- lista di ritorno dei nodi da reinserire
-
-							// 2- lista di ritorno dei livelli dei corrispondenti nodi da reinserire
-
-							// 3- nodo eliminato
-
-							// 4- livello di partenza: radice = 1
-
-							// questa AdjustTree estrae tutti i sottoalberi che hanno
-
-							// pochi rettangoli nella radice
-
-							AdjustTree(listaNodi, listaLivelli, leaf, livello);
-
-							// ora reinserisco gli elementi della mia lista
-
-							insertOldElement(listaNodi, listaLivelli);
-
-						}
-
-						else {
-
-							// devo solo riaggiornare il padre
-
-							if (leaf.getParent() != null)
-								AdjustTree(leaf);
-
-						}
-
-					}
-
-				}
-
-			}
-
-			// se la radice ha solo un figlio...
-
-			if (root.numRect() == 1 && root.getChild(0) != null) {
-
-				// ...il figlio diventa la nuova radice
-
-				creaLista4(root, 1);
-
-				root = root.getChild(0);
-
-				root.setParent(null);
-
-				root.setIndex(-1);
-
-			}
-
-			if (root.numRect() == 0) {
-
-				root = null;
-
-			}
-
-		}
-
+		createlist.deleteElement(r);
 	}
-
-	// prende dalle liste tutti gli elementi che sono stati eliminati
-
-	// e li va a inserire di nuovo nell'albero
-
 	public void insertOldElement(ArrayList ln, ArrayList ll) {
-
-		Node n, child, choosedLeaf, newNode;
-
-		Rectangle rectTmp;
-
-		int l;
-
-		newNode = null;
-
-		choosedLeaf = null;
-
-		rectTmp = null;
-
-		// scorro tutti i nodi da reinserire
-
-		for (int i = ln.size() - 1; i > (-1); i--) {
-
-			n = (Node) ln.get(i);
-
-			l = ((Integer) ll.get(i)).intValue();
-
-			// per ogni nodo estraggo tutti i rettangoli contenuti e li inserisco
-
-			for (int k = 0; k < capacity; k++) {
-
-				rectTmp = n.getRect(k);
-
-				child = n.getChild(k);
-
-				if (rectTmp != null) {
-
-					// scelgo la foglia dove inserirlo
-
-					choosedLeaf = ChooseLeaf(rectTmp, l, 1);
-
-					// se c'e' il rettangolo lo inserisco nella posizione scelta
-
-					newNode = choosedLeaf.insertNewRectangle(rectTmp, child);
-
-					// ora verifico se si sono creati dei nuovi nodi
-
-					if (newNode != null) {
-
-						// Nuovo nodo da inserire
-
-						AdjustTree(choosedLeaf, newNode);
-
-					}
-
-					// altrimenti aggiorno solo i predecessori
-
-					else {
-
-						if (choosedLeaf.getParent() != null) {
-
-							// Nessun nuovo nodo da inserire
-
-							AdjustTree(choosedLeaf);
-
-						}
-
-					}
-
-				}
-
-			}
-
-		}
-
+		createlist.insertOldElement(ln,ll);
 	}
-
+	
 	// è chiamata appena tolta la foglia trovata e il nodo padre ha pochi
 
 	// elementi
